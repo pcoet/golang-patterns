@@ -14,9 +14,11 @@
 
 package datastructs
 
+type BagItem interface{}
+
 // Bag represents a bag (or multiset) of integers. It supports insertion and iteration.
 type Bag struct {
-	a []int // array of items
+	a []BagItem // array of items
 }
 
 // IsEmpty returns true if the bag is empty; false otherwise.
@@ -31,19 +33,19 @@ func (b *Bag) Size() int {
 
 // Add adds an item to the bag.
 // Note that the built-in append function runs in amortized O(1) time, i.e. it's performant.
-func (b *Bag) Add(item int) {
+func (b *Bag) Add(item BagItem) {
 	b.a = append(b.a, item)
 }
 
 // Iterator returns a function for iterating over the items in the bag.
-func (b *Bag) Iterator() func() (int, bool) {
+func (b *Bag) Iterator() func() (BagItem, bool) {
 	i := 0
-	return func() (int, bool) {
+	return func() (BagItem, bool) {
 		if i >= b.Size() {
 			return 0, false
 		}
-		n := b.a[i]
+		item := b.a[i]
 		i = i + 1
-		return n, true
+		return item, true
 	}
 }

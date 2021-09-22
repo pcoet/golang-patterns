@@ -19,7 +19,7 @@ import (
 	"testing"
 )
 
-func TestBag(t *testing.T) {
+func TestIntBag(t *testing.T) {
 	b := Bag{}
 
 	if b.IsEmpty() != true {
@@ -62,6 +62,53 @@ func TestBag(t *testing.T) {
 			n, ok := next()
 			if !((n == tc.n) && (ok == tc.ok)) {
 				t.Errorf("expected %v and %v; got %v and %v", tc.n, tc.ok, n, ok)
+			}
+		})
+	}
+}
+
+func TestStringBag(t *testing.T) {
+	b := Bag{}
+
+	if b.IsEmpty() != true {
+		t.Errorf("expected %v; got %v", true, b.IsEmpty())
+	}
+
+	strs := []string{"a", "b", "c", "d", "e", "f", "g"}
+	for _, s := range strs {
+		b.Add(s)
+	}
+
+	if b.IsEmpty() != false {
+		t.Errorf("expected %v; got %v", false, b.IsEmpty())
+	}
+
+	if b.Size() != 7 {
+		t.Errorf("expected %v; got %v", 7, b.Size())
+	}
+
+	// create an iterator
+	next := b.Iterator()
+
+	testCases := []struct {
+		name string
+		s    string
+		ok   bool
+	}{
+		{"t1", "a", true},
+		{"t2", "b", true},
+		{"t3", "c", true},
+		{"t4", "d", true},
+		{"t5", "e", true},
+		{"t6", "f", true},
+		{"t7", "g", true},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			s, ok := next()
+			if !((s == tc.s) && (ok == tc.ok)) {
+				t.Errorf("expected %v and %v; got %v and %v", tc.s, tc.ok, s, ok)
 			}
 		})
 	}
