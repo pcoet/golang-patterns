@@ -30,7 +30,7 @@ type Graph struct {
 // CreateGraph initializes an empty graph with v vertices and 0 edges.
 func CreateGraph(v int) Graph {
 	if v < 0 {
-		panic("number of vertices must be non-negatie")
+		panic("number of vertices must be non-negative")
 	}
 	g := Graph{}
 	g.V = v
