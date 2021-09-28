@@ -35,7 +35,6 @@ func bfs(g datastructs.Graph, s int, marked []bool, cb Proc) {
 				q = append(q, w)
 			}
 		}
-
 	}
 }
 
@@ -43,6 +42,6 @@ func bfs(g datastructs.Graph, s int, marked []bool, cb Proc) {
 // a callback function on each discovered vertex.
 func BFS(g datastructs.Graph, s int, cb Proc) {
 	marked := make([]bool, g.V)
-	validateVertex(s, marked)
+	validateVertex(s, g.V)
 	bfs(g, s, marked, cb)
 }

@@ -23,21 +23,19 @@ import (
 // Proc is a callback for processing nodes in the graph. It will be invoked once per node.
 type Proc func(int)
 
-func validateVertex(v int, marked []bool) {
-	V := len(marked)
+func validateVertex(v int, V int) {
 	if v < 0 || v >= V {
 		msg := fmt.Sprintf("vertex %v is not between 0 and %v", v, V-1)
 		panic(msg)
 	}
 }
 
-func dfs(g datastructs.Graph, v int, count int, marked []bool, cb Proc) {
-	count = count + 1
+func dfs(g datastructs.Graph, v int, marked []bool, cb Proc) {
 	marked[v] = true
 	cb(v)
 	for _, w := range g.Adj[v] {
 		if !marked[w] {
-			dfs(g, w, count, marked, cb)
+			dfs(g, w, marked, cb)
 		}
 	}
 }
@@ -46,6 +44,6 @@ func dfs(g datastructs.Graph, v int, count int, marked []bool, cb Proc) {
 // a callback function on each discovered vertex.
 func DFS(g datastructs.Graph, s int, cb Proc) {
 	marked := make([]bool, g.V)
-	validateVertex(s, marked)
-	dfs(g, s, 0, marked, cb)
+	validateVertex(s, g.V)
+	dfs(g, s, marked, cb)
 }
