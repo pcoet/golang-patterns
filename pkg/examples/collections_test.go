@@ -6,6 +6,8 @@ func ExampleDemoSlice() {
 	// [aaa bbb ccc ddd eee]
 	// [aaa bbb ccc ddd EEE]
 	// [aaa bbb ccc ddd EEE fff ggg]
+	// 8
+	// 14
 	// 7
 	// 7
 	// 0) crow

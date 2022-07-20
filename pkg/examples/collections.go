@@ -23,21 +23,32 @@ func DemoSlice() {
 	// create a slice literal
 	fibs := []int{1, 1, 2, 3, 5, 8, 13}
 
-	// get the length of the slice
-	fmt.Println(len(fibs)) // 7
+	// create a copy of the slice
+	fibsCopy := make([]int, len(fibs))
+	copy(fibsCopy, fibs)
 
-	// get the capacity of the slice
-	fmt.Println(cap(fibs)) // 7
+	// append an item to the slice
+	fibs = append(fibs, 21)
+
+	// get the length of the slice
+	fmt.Println(len(fibs)) // 8
+
+	// see that the capacity of the slice has doubled
+	fmt.Println(cap(fibs)) // 14
+
+	// see that the length and capacity of the copy have not been changed
+	fmt.Println(len(fibsCopy)) // 7
+	fmt.Println(cap(fibsCopy)) // 7
 
 	// create a dynamically sized slice
 	n := 2
 	birds := make([]string, n)
 
-	// add birds
+	// assign elements to the slice
 	birds[0] = "crow"
 	birds[1] = "duck"
 
-	// add more birds using `append`
+	// append elements to the slice
 	birds = append(birds, "seagull", "pigeon")
 
 	// iterate over the slice
