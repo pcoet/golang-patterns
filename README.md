@@ -36,4 +36,4 @@ merchantability, or fitness for a particular purpose.
 
 ### Test
 
-    make tests
+    make test
