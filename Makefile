@@ -1,4 +1,4 @@
-.PHONY: clean-bin build run help
+.PHONY: clean-bin build run test help
 .DEFAULT_GOAL := help
 
 UHOME = ${shell echo "${HOME}"}
@@ -13,7 +13,7 @@ build: clean-bin
 	@go install github.com/pcoet/golang-patterns/cmd/testapp
 run:
 	@${GOBIN}/testapp
-tests:
+test:
 	go test ./...
 help:
 	@echo "For usage instructions, see README.md."
