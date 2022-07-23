@@ -1,14 +1,11 @@
-# Golang Patterns
+# Golang patterns
 
-This project contains Go implementations of canonical algorithms and data structures.
-
-Most of the implementations are adapted from the open-source Java project [Algorithms, 4th Edition](https://github.com/kevin-wayne/algs4). This isn't the first (partial) Go implementation of Robert Sedgewick and Kevin Wayne's classic algorithms, but hopefully it adds something new.
-
-Eventually we'd like to add:
-
-* Examples of Go templating
-* Examples of Google Cloud functions
-* ?
+This project contains Go usage examples and implementations of canonical
+algorithms and data structures. Most of the implementations are adapted from the
+open-source Java project
+[Algorithms, 4th Edition](https://github.com/kevin-wayne/algs4). This isn't the
+first (partial) Go implementation of Robert Sedgewick and Kevin Wayne's classic
+algorithms, but hopefully it adds something new.
 
 ## Contributing
 
@@ -30,10 +27,14 @@ merchantability, or fitness for a particular purpose.
 
     make build
 
-### Run
-
-    make run
-
 ### Test
 
     make test
+
+### Run
+
+    ~/go/bin/testapp
+
+or, if you have ~/go/bin on your path:
+
+    testapp
