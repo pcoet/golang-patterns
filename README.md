@@ -1,11 +1,11 @@
 # Golang patterns
 
 This project contains Go usage examples and implementations of canonical
-algorithms and data structures. Most of the implementations are adapted from the
-open-source Java project
+algorithms and data structures. The algorithms and data structures are adapted
+from the open-source Java project
 [Algorithms, 4th Edition](https://github.com/kevin-wayne/algs4). This isn't the
-first (partial) Go implementation of Robert Sedgewick and Kevin Wayne's classic
-algorithms, but hopefully it adds something new.
+first (partial) Go implementation of Robert Sedgewick and Kevin Wayne's project,
+but hopefully it adds something new.
 
 ## Contributing
 
