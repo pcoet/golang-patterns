@@ -1,9 +1,11 @@
 package examples
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func DemoSlice() {
-
 	// create an array
 	a := [7]string{"aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg"}
 
@@ -58,5 +60,51 @@ func DemoSlice() {
 		// 1) duck
 		// 2) seagull
 		// 3) pigeon
+	}
+}
+
+func DemoMap() {
+	// create a map literal a with string keys and string values
+	cm := map[string]string{
+		"red":   "#ff0000",
+		"green": "#008000",
+		"blue":  "#0000ff",
+	}
+	fmt.Println(cm) // map[blue:#0000ff green:#008000 red:#ff0000]
+
+	// create an empty map with make
+	cm = make(map[string]string)
+	fmt.Println(cm) // map[]
+
+	// add elements to the map
+	cm["red"] = "#ff0000"
+	cm["green"] = "#008000"
+	cm["blue"] = "#0000ff"
+	fmt.Println(cm) // map[blue:#0000ff green:#008000 red:#ff0000]
+
+	// get the length of the map
+	fmt.Println(len(cm)) // 3
+
+	// get a value from the map
+	fmt.Println(cm["blue"]) // #0000ff
+
+	// delete an element
+	delete(cm, "blue")
+	fmt.Println(len(cm)) // 2
+
+	// try to get a deleted element
+	_, ok := cm["blue"]
+	fmt.Println(ok) // false
+
+	// iterate over a sorted map (iteration order is not guaranteed for maps)
+	keys := make([]string, 0)
+	for k := range cm {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		fmt.Println(k, cm[k])
+		// green #008000
+		// red #ff0000
 	}
 }
