@@ -1,5 +1,52 @@
 # Go cheatsheet
 
+## Generics
+
+An example of a generic type with generic methods:
+
+```go
+type Stack[T any] struct {
+	a []T // array of items
+}
+
+func (s *Stack[T]) IsEmpty() bool {
+	return len(s.a) == 0
+}
+
+func (s *Stack[T]) Push(item T) {
+	s.a = append(s.a, item)
+}
+
+func (s *Stack[T]) Pop() T {
+	if s.IsEmpty() {
+		panic("cannot pop from an empty stack")
+	}
+	n := s.a[len(s.a)-1]
+	s.a = s.a[:len(s.a)-1]
+	return n
+}
+
+func (s *Stack[T]) Peek() T {
+	if s.IsEmpty() {
+		panic("cannot peek into an empty stack")
+	}
+	return s.a[len(s.a)-1]
+}
+```
+
+An example type set:
+
+```go
+// Ordered represents the union of int, float64, and string types.
+type Ordered interface {
+	int | float64 | ~string
+}
+```
+
+See also:
+* [Go Blog: An Introduction to Generics](https://go.dev/blog/intro-generics)
+* [Type Parameters Proposal: Map/Reduce/Filter](https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md#map_reduce_filter)
+
 ## Maps
 
 ```go
@@ -186,4 +233,4 @@ func ExampleStack() {
 }
 ```
 
-See also: [The Go Blog: Testable Examples in Go](https://go.dev/blog/examples)
+See also: [Go Blog: Testable Examples in Go](https://go.dev/blog/examples)

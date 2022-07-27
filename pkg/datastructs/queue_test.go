@@ -21,7 +21,7 @@ import (
 )
 
 func TestQueue(t *testing.T) {
-	q := Queue{}
+	q := Queue[int]{}
 
 	if q.IsEmpty() != true {
 		t.Errorf("expected %v; got %v", true, q.IsEmpty())
@@ -87,26 +87,26 @@ func TestQueue(t *testing.T) {
 }
 
 func ExampleQueue() {
-	q := Queue{}
-	nums := []int{1, 1, 2, 3, 5, 8, 13}
-	for _, n := range nums {
-		q.Enqueue(n)
+	q := Queue[string]{}
+	strs := []string{"aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg"}
+	for _, s := range strs {
+		q.Enqueue(s)
 	}
 	next := q.Iterator()
 	// iterate over the items in the queue
 	for {
-		n, ok := next()
+		s, ok := next()
 		if !ok {
 			break
 		}
-		fmt.Println(n)
+		fmt.Println(s)
 	}
 	// Output:
-	// 1
-	// 1
-	// 2
-	// 3
-	// 5
-	// 8
-	// 13
+	// aaa
+	// bbb
+	// ccc
+	// ddd
+	// eee
+	// fff
+	// ggg
 }

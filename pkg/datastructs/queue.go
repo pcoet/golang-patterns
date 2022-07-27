@@ -15,38 +15,43 @@
 
 package datastructs
 
-// Queue represents a first-in-first-out (FIFO) collection of ints.
-type Queue struct {
-	a []int
+// Ordered represents the union of int, float64, and string types.
+type Ordered interface {
+	int | float64 | ~string
+}
+
+// Queue represents a first-in-first-out (FIFO) collection of items.
+type Queue[T Ordered] struct {
+	a []T
 }
 
 // IsEmpty returns true if the queue is empty; false otherwise.
-func (q *Queue) IsEmpty() bool {
+func (q *Queue[T]) IsEmpty() bool {
 	return len(q.a) == 0
 }
 
 // Size returns the number of items in the queue.
-func (q *Queue) Size() int {
+func (q *Queue[T]) Size() int {
 	return len(q.a)
 }
 
 // Enqueue adds an item to the queue.
-func (q *Queue) Enqueue(n int) {
-	q.a = append(q.a, n)
+func (q *Queue[T]) Enqueue(item T) {
+	q.a = append(q.a, item)
 }
 
 // Dequeue removes and returns the least recently added item on the queue.
-func (q *Queue) Dequeue() int {
+func (q *Queue[T]) Dequeue() T {
 	if q.IsEmpty() {
 		panic("cannot dequeue from an empty queue")
 	}
-	var n int
-	n, q.a = q.a[0], q.a[1:]
-	return n
+	var item T
+	item, q.a = q.a[0], q.a[1:]
+	return item
 }
 
 // Peek returns the least recently added item, without removing it.
-func (q *Queue) Peek() int {
+func (q *Queue[T]) Peek() T {
 	if q.IsEmpty() {
 		panic("cannot peek into an empty queue")
 	}
@@ -54,14 +59,15 @@ func (q *Queue) Peek() int {
 }
 
 // Iterator returns a function for iterating over the items in the queue.
-func (q *Queue) Iterator() func() (int, bool) {
+func (q *Queue[T]) Iterator() func() (T, bool) {
 	i := 0
-	return func() (int, bool) {
+	return func() (T, bool) {
+		var item T
 		if i >= q.Size() {
-			return 0, false
+			return item, false
 		}
-		n := q.a[i]
+		item = q.a[i]
 		i = i + 1
-		return n, true
+		return item, true
 	}
 }
