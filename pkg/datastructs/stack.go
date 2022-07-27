@@ -15,29 +15,29 @@
 
 package datastructs
 
-// Stack represents a Stack of integers. It supports pushing, popping, and peeking.
-type Stack struct {
-	a []int // array of items
+// Stack represents a Stack of generic items. It supports push, pop, and peek operations.
+type Stack[T any] struct {
+	a []T // array of items
 }
 
 // IsEmpty returns true if the Stack is empty; false otherwise.
-func (s *Stack) IsEmpty() bool {
+func (s *Stack[T]) IsEmpty() bool {
 	return len(s.a) == 0
 }
 
 // Size returns the number of items in the Stack.
-func (s *Stack) Size() int {
+func (s *Stack[T]) Size() int {
 	return len(s.a)
 }
 
 // Push pushes an item onto the Stack.
-func (s *Stack) Push(item int) {
+func (s *Stack[T]) Push(item T) {
 	// Note that the built-in append function runs in amortized O(1) time, i.e. it's performant.
 	s.a = append(s.a, item)
 }
 
 // Pop removes and returns the item most recently added to the stack.
-func (s *Stack) Pop() int {
+func (s *Stack[T]) Pop() T {
 	if s.IsEmpty() {
 		panic("cannot pop from an empty stack")
 	}
@@ -47,7 +47,7 @@ func (s *Stack) Pop() int {
 }
 
 // Peek returns, but does not remove, the most recently added item.
-func (s *Stack) Peek() int {
+func (s *Stack[T]) Peek() T {
 	if s.IsEmpty() {
 		panic("cannot peek into an empty stack")
 	}
@@ -55,14 +55,15 @@ func (s *Stack) Peek() int {
 }
 
 // Iterator returns a function for iterating over the items in the stack.
-func (s *Stack) Iterator() func() (int, bool) {
+func (s *Stack[T]) Iterator() func() (T, bool) {
 	i := s.Size() - 1
-	return func() (int, bool) {
+	return func() (T, bool) {
+		var t T
 		if i < 0 {
-			return 0, false
+			return t, false
 		}
-		n := s.a[i]
+		t = s.a[i]
 		i = i - 1
-		return n, true
+		return t, true
 	}
 }

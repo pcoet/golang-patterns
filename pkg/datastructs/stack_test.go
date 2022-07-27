@@ -21,7 +21,7 @@ import (
 )
 
 func TestStack(t *testing.T) {
-	s := Stack{}
+	s := Stack[int]{}
 
 	// new stack should be empty
 	if s.IsEmpty() != true {
@@ -96,7 +96,7 @@ func TestStack(t *testing.T) {
 }
 
 func ExampleStack() {
-	s := Stack{}
+	s := Stack[int]{}
 	nums := []int{1, 1, 2, 3, 5, 8, 13}
 	for _, n := range nums {
 		s.Push(n)
