@@ -14,3 +14,14 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 package examples
+
+import "testing"
+
+func TestCalculate(t *testing.T) {
+	want := 4.0
+	got, _ := Calculate("2 + 2")
+
+	if want != got {
+		t.Errorf("expected %v; got %v", want, got)
+	}
+}
