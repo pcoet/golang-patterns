@@ -271,9 +271,9 @@ Before:
 After:
 
 ```go
-{"add", "2 + 2", 5, false},
+{"add", "2 + 2", 5, false}, // 2 + 2 = 5; test will fail
 ...
-{"multiply", "2 * 2", 5, false},
+{"multiply", "2 * 2", 5, false}, // 2 * 2 = 5; test will fail
 ```
 
 Now, when you run `go test`, these cases fail with output like this:
@@ -318,22 +318,17 @@ the `-v` flag for such scenarios.
 In `TestAdd`, insert the log statement
 `t.Logf("Logging the actual result: %v", got)`.
 
-Before:
-
 ```go
-got, _ := Calculate("2 + 2")
+func TestAdd(t *testing.T) {
+	got, _ := Calculate("2 + 2")
 
-if got != want {
-```
+  // NEW CODE: write to the error log
+  t.Logf("Logging the actual result: %v", got)
 
-After:
-
-```go
-got, _ := Calculate("2 + 2")
-
-t.Logf("Logging the actual result: %v", got)
-
-if got != want {
+	if got != 4.0 {
+    t.Errorf("got %v; want 4.0", got)
+	}
+}
 ```
 
 Save your changes and run the test with the `-v` flag: `go test -v`. You'll see
