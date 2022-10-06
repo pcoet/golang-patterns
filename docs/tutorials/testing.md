@@ -1,9 +1,14 @@
 # An Introduction to testing with Go
 
-This tutorial provides an introduction to automated testing in Go. You'll create
-a Go project, a function, a test that verifies a single output for the function,
-and a table-driven test that verifies multiple outputs for the function. The
-tutorial assumes that you have Go installed and that you have some basic
+This tutorial provides an introduction to automated testing in Go. As you work
+through the tutorial, you'll create the following resources:
+
+* A Go project
+* A calculator function that performs simple arithmetic operations
+* A test that verifies a single output for the function
+* A table-driven test that verifies multiple outputs for the function
+
+The tutorial assumes that you have Go installed and that you have a basic
 familiarity with Go programming and with software testing.
 
 For help installing Go, see [Download and install](https://go.dev/doc/install).
@@ -15,18 +20,18 @@ a signature of the form `func TestXxx(*testing.T)`, and they must be in files
 with names ending in **_test.go**. For example, if you had an `Add` function in
 an **arithmetic.go** file, and you wanted to test it, you could create an
 **arithmetic_test.go** file and add a function with the signature
-`func TestAdd(*testing.t)`. Then you could use the `test` command to run the
-test. You'll create a similar setup in the following sections.
+`func TestAdd(*testing.t)`. Then you could use the `go test` command to run the
+test. You'll set up a similar test harness in the following sections.
 
 ## Create a project
 
 First, create a Go project:
 
-1. Create a directory called **tutorial** and change into the directory:
+1. Make a directory called **tutorial** and change into the directory:
    `mkdir tutorial && cd tutorial`
-2. Create a module: `go mod init tutorial/calculator`
+2. Initialize a module: `go mod init tutorial/calculator`
 
-You'll see a new file, **go.mod**. If you inspect the contents of the file,
+You should see a new file, **go.mod**. If you inspect the contents of the file,
 you should see something like this:
 
 ```go
@@ -35,9 +40,7 @@ module tutorial/calculator
 go 1.19
 ```
 
-The Go version depends on your environment. The module is named
-`tutorial/calculator` because you're going to create an example function,
-`Calculate`, that performs simple arithmetic.
+The Go version depends on your environment.
 
 ## Create an example function
 
@@ -87,7 +90,8 @@ Add the function to your project:
 
 1. In the **tutorial** directory, create a file called **calculate.go**:
    `touch calculate.go`
-2. Copy the code above and paste it into **calculate.go**.
+2. Copy the code above, including the package and import statements, and paste
+   it into **calculate.go**.
 3. Save the file.
 
 `Calculate` performs an arithmetic operation (addition, subtraction,
@@ -105,14 +109,21 @@ Notice that `Calculate` returns a float and an error. If the function finishes
 successfully, it returns the result of the arithmetic operation as a
 float and `nil` for the error. If the function doesn't finish successfully, it
 returns the zero value for the float, which is 0, and an error. This means that
-you always have to check for an error before using the result. Otherwise you
-can't tell the difference between an expected 0 (from "2 - 2", for example)
+you should check for an error before using a returned value of `0`. Otherwise
+you can't tell the difference between an expected 0 (from "2 - 2", for example)
 and a zero value returned from an error.
+
+> Note: To learn more about verifying a zero value using idiomatic Go, see
+the discussion of the "comma ok" pattern in
+[Effective Go](https://go.dev/doc/effective_go#maps).
 
 ## Create a simple test
 
 First you'll write a simple test to verify a single output of the function. The
-test will verify that `Calculate` can do addition. Here's the test function:
+test will verify that `Calculate` can do addition. To keep things simple, it
+won't inspect the error value.
+
+Here's the test function:
 
 ```go
 package calculator
@@ -123,7 +134,7 @@ import (
 
 func TestAdd(t *testing.T) {
 	want := 4.0
-	got, _ := Calculate("2 + 2")
+	got, _ := Calculate("2 + 2") // note that the error is discarded
 
 	if got != want {
 		t.Errorf("got %v; want %v", got, want)
@@ -134,8 +145,9 @@ func TestAdd(t *testing.T) {
 Add the test to your project and run it:
 
 1. In the **tutorial** directory, create a file called **calculate_test.go**:
-   `touch calculate_test.go`.
-2. Copy the code above and paste it into **calculate_test.go**.
+   `touch calculate_test.go`
+2. Copy the code above, including the package and import statements, and paste
+   it into **calculate_test.go**.
 3. Save the file.
 4. Run `go test`. This runs all the tests in the current directory.
 
@@ -143,19 +155,20 @@ You should see output similar to the following:
 
 ```
 PASS
-ok  	tutorial/calculator	0.556s
+ok  	tutorial/calculator	0.445s
 ```
 
 This means that your test ran successfully.
 
 `TestAdd` has a signature of the form `func TestXxx(*testing.T)` and is in a
-file with a name ending in **_test.go**, so `go test` runs it. Because
+file with a name ending in **_test.go**, so `go test` knows to run it. Because
 of the special file name, the test code won't be compiled as part of a build.
+
 You can also specify which packages you want to test with `go test`. If you had
 a **pkg** directory, you could run all the tests beneath it using
 `go test ./pkg/...`. To test all of the packages in a project, you can run
-`go test ./...` from the top directory. To learn more about the `test` command,
-see [Test packages](https://pkg.go.dev/cmd/go#hdr-Test_packages).
+`go test ./...` from the top directory. To learn more about the `go test`
+command, see [Test packages](https://pkg.go.dev/cmd/go#hdr-Test_packages).
 
 `TestAdd` is slightly verbose. It could be rewritten without using the `want`
 variable, like this:
@@ -170,18 +183,18 @@ func TestAdd(t *testing.T) {
 }
 ```
 
-But in this case, using `want` is the better choice. For one thing, it makes the
+But in this case, using `want` is a better choice. For one thing, it makes the
 test more readable to other Go programmers. The `want` and `got` names are
 common in Go testing, with the expected value assigned to `want` and the
 actual value assigned to `got`. Also, using the `want` variable makes the test
 more maintainable. If you need to change the expected result, you only need to
-update the code in one place, rather than two (the constant `4.0` and the
-string "4.0" in the error message).
+update the code in one place (`want`), rather than two (the constant `4.0` and
+the string `"4.0"` in the error message).
 
-If the actual and expected results don't match (`want != got`),
+If the actual and expected results don't match (`if got != want`),
 [Errorf](https://pkg.go.dev/testing#T.Errorf) logs an error message and marks
-the test as failed. If you wanted to stop execution of the failed function
-immediately, you could use [Fatalf](https://pkg.go.dev/testing#T.Fatalf). If you
+the test as failed. If you want to stop execution of a failed function
+immediately, you can use [Fatalf](https://pkg.go.dev/testing#T.Fatalf). If you
 don't need formatted output, you can use the
 [Error](https://pkg.go.dev/testing#T.Error) or
 [Fatal](https://pkg.go.dev/testing#T.Fatal) methods.
@@ -195,27 +208,27 @@ table-driven test:
 ```go
 func TestCalculate(t *testing.T) {
 	cases := []struct {
-		name  string
-		in    string
-		want  float64
-		isErr bool
+		name string
+		in   string
+		want float64
+		ok   bool
 	}{
-		{"too few fields", "2 +", 0, true},
-		{"too many fields", "2 + 2 +", 0, true},
-		{"bad first term", "n + 2", 0, true},
-		{"bad second term", "2 + n", 0, true},
-		{"add", "2 + 2", 4, false},
-		{"subtract", "2 - 2", 0, false},
-		{"multiply", "2 * 2", 4, false},
-		{"divide", "2 / 2", 1, false},
-		{"unknown op", "2 # 2", 0, true},
+		{"too few fields", "2 +", 0, false},
+		{"too many fields", "2 + 2 +", 0, false},
+		{"bad first term", "n + 2", 0, false},
+		{"bad second term", "2 + n", 0, false},
+		{"add", "2 + 2", 4, true},
+		{"subtract", "2 - 2", 0, true},
+		{"multiply", "2 * 2", 4, true},
+		{"divide", "2 / 2", 1, true},
+		{"unknown op", "2 # 2", 0, false},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
 			got, err := Calculate(c.in)
-			isErr := err != nil
-			if (got != c.want) || (isErr != c.isErr) {
-				t.Errorf("got %v, %v; want %v, %v", got, isErr, c.want, c.isErr)
+			ok := err == nil
+			if (got != c.want) || (ok != c.ok) {
+				t.Errorf("got %v, %v; want %v, %v", got, ok, c.want, c.ok)
 			}
 		})
 	}
@@ -233,23 +246,34 @@ You should see output like before, indicating that the tests have passed.
 `TestCalculate` uses a slice of structs, `cases` to define the inputs and
 outputs of tests to be run. This is the test table. The `name` field identifies
 the test case. The `in` field holds the input string. The `want` field
-specifies the expected result. And the `isErr` field indicates if an error is
-expected. It's important to test both `want` and `isErr`. Both are
-needed to verify a result, because the zero value for a float is 0. For example,
-the inputs `"0 + 0"` and `"0 + foo"` would both cause `Calculate` to return `0`
-as a first value, but only `"0 + foo"` would return a non-nil error.
+specifies the expected result. And the `ok` field indicates if `Calculate`
+is expected to return without an error. Unlike `TestAdd`, `TestCalculate`
+verifies both the float and the error returned by `Calculate`:
+
+```go
+			got, err := Calculate(c.in)
+			ok := err == nil // no error means the result is ok
+			if (got != c.want) || (ok != c.ok) { // check both `got` and `ok`
+				t.Errorf("got %v, %v; want %v, %v", got, ok, c.want, c.ok)
+			}
+```
+
+For some cases, you do need to check both `got` and `ok` to verify the result.
+For example, when `TestCalculate` tests the input `"n + 2"`, it expects a `0`
+and an `ok` value of `false`. But when it tests `"2 - 2"`, it expects a `0` and
+an `ok` value of `true`.
 
 The test table has a test for each error condition and each operation in
 `Calculate`. You could add more tests, but you'd soon be testing the Go language
 more than the logic of the `Calculate` function.
 
-Like `TestAdd`, `TestCalculate` checks an actual result against an expected
-result and invokes `Errorf` if the results aren't equal. The tests happen in the
-body of the [t.Run](https://pkg.go.dev/testing#T.Run) method, which is invoked
-for each element in the test table. `Run` has two parameters: a `name` string
-that identifies the test and an anonymous function to manage the test. Behind
-the scenes, `Run` creates a goroutine for each test. In this way, you can use
-`Run` to create subtests.
+If the actual and expected results don't match, `TestCalculate` invokes `Errorf`.
+
+The tests happen in the body of the [t.Run](https://pkg.go.dev/testing#T.Run)
+method, which is invoked for each element in the test table. `Run` has two
+parameters: a `name` string that identifies the test and an anonymous function
+to manage the test. Behind the scenes, `Run` creates a goroutine for each test.
+In this way, you can use `Run` to create subtests.
 
 You could also create a table-driven test without using `Run`, but the support
 for named subtests is useful, as you'll see in the next section.
@@ -263,17 +287,17 @@ of `4` each test expects `5`.
 Before:
 
 ```go
-{"add", "2 + 2", 4, false},
-...
-{"multiply", "2 * 2", 4, false},
+		{"add", "2 + 2", 4, true},
+		...
+		{"multiply", "2 * 2", 4, true},
 ```
 
 After:
 
 ```go
-{"add", "2 + 2", 5, false}, // 2 + 2 = 5; test will fail
-...
-{"multiply", "2 * 2", 5, false}, // 2 * 2 = 5; test will fail
+		{"add", "2 + 2", 5, true}, // 2 + 2 = 5; test will fail
+		...
+		{"multiply", "2 * 2", 5, true}, // 2 + 2 = 5; test will fail
 ```
 
 Now, when you run `go test`, these cases fail with output like this:
@@ -281,12 +305,12 @@ Now, when you run `go test`, these cases fail with output like this:
 ```
 --- FAIL: TestCalculate (0.00s)
     --- FAIL: TestCalculate/add (0.00s)
-        calculate_test.go:37: got 4, false; want 5, false
+        calculate_test.go:38: got 4, true; want 5, true
     --- FAIL: TestCalculate/multiply (0.00s)
-        calculate_test.go:37: got 4, false; want 5, false
+        calculate_test.go:38: got 4, true; want 5, true
 FAIL
 exit status 1
-FAIL	tutorial/calculator	0.219s
+FAIL	tutorial/calculator	4.003s
 ```
 
 You can see how `Run` uses the `name` arguments to identify the subtests:
@@ -296,11 +320,11 @@ less helpful. It would look something like this:
 
 ```
 --- FAIL: TestCalculate (0.00s)
-    calculate_test.go:37: got 4, false; want 5, false
-    calculate_test.go:37: got 4, false; want 5, false
+    calculate_test.go:38: got 4, true; want 5, true
+    calculate_test.go:38: got 4, true; want 5, true
 FAIL
 exit status 1
-FAIL	tutorial/calculator	0.602s
+FAIL	tutorial/calculator	0.603s
 ```
 
 Here you can see that the test returned two errors, but you have to use the
@@ -320,13 +344,14 @@ In `TestAdd`, insert the log statement
 
 ```go
 func TestAdd(t *testing.T) {
-	got, _ := Calculate("2 + 2")
+	want := 4.0
+	got, _ := Calculate("2 + 2") // note that the error is discarded: `_`
 
-  // NEW CODE: write to the error log
-  t.Logf("Logging the actual result: %v", got)
+	// NEW CODE: write to the error log
+	t.Logf("Logging the actual result: %v", got)
 
-	if got != 4.0 {
-    t.Errorf("got %v; want 4.0", got)
+	if got != want {
+		t.Errorf("got %v; want %v", got, want)
 	}
 }
 ```
@@ -337,7 +362,7 @@ the output from the log statement:
 
 ```
 === RUN   TestAdd
-    calculate_test.go:10: Logging the actual result: 4
+    calculate_test.go:12: Logging the actual result: 4
 --- PASS: TestAdd (0.00s)
 ```
 

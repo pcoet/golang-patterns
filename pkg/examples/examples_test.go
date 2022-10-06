@@ -30,27 +30,27 @@ func TestAdd(t *testing.T) {
 
 func TestCalculate(t *testing.T) {
 	cases := []struct {
-		name  string
-		in    string
-		want  float64
-		isErr bool
+		name string
+		in   string
+		want float64
+		ok   bool
 	}{
-		{"too few fields", "2 +", 0, true},
-		{"too many fields", "2 + 2 +", 0, true},
-		{"bad first term", "n + 2", 0, true},
-		{"bad second term", "2 + n", 0, true},
-		{"add", "2 + 2", 4, false},
-		{"subtract", "2 - 2", 0, false},
-		{"multiply", "2 * 2", 4, false},
-		{"divide", "2 / 2", 1, false},
-		{"unknown op", "2 # 2", 0, true},
+		{"too few fields", "2 +", 0, false},
+		{"too many fields", "2 + 2 +", 0, false},
+		{"bad first term", "n + 2", 0, false},
+		{"bad second term", "2 + n", 0, false},
+		{"add", "2 + 2", 4, true},
+		{"subtract", "2 - 2", 0, true},
+		{"multiply", "2 * 2", 4, true},
+		{"divide", "2 / 2", 1, true},
+		{"unknown op", "2 # 2", 0, false},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
 			got, err := Calculate(c.in)
-			isErr := err != nil
-			if (got != c.want) || (isErr != c.isErr) {
-				t.Errorf("got %v, %v; want %v, %v", got, isErr, c.want, c.isErr)
+			ok := err == nil
+			if (got != c.want) || (ok != c.ok) {
+				t.Errorf("got %v, %v; want %v, %v", got, ok, c.want, c.ok)
 			}
 		})
 	}
