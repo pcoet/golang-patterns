@@ -1,15 +1,15 @@
 # An Introduction to testing with Go
 
 This tutorial provides an introduction to automated testing in Go. As you work
-through the tutorial, you'll create the following resources:
+through the tutorial, you'll create resources that demonstrate idiomatic Go
+testing:
 
-* A Go project
 * A calculator function that performs simple arithmetic operations
-* A test that verifies a single output for the function
-* A table-driven test that verifies multiple outputs for the function
+* A test that verifies a single output for the calculator
+* A table-driven test that verifies multiple outputs for the calculator
 
-The tutorial assumes that you have Go installed and that you have a basic
-familiarity with Go programming and with software testing.
+The tutorial assumes that you have Go installed and that you're familiar with
+the basics of Go programming and software testing.
 
 For help installing Go, see [Download and install](https://go.dev/doc/install).
 
@@ -99,19 +99,19 @@ multiplication, or division) on two numbers. It takes an input string, splits
 the string on white space, validates the substrings, performs the
 specified operation, and returns the result. The
 terms and symbol in the input must be separated by white space. For example,
-"2 + 2" is valid input, but "2+2" is not. If you were building a production
+`"2 + 2"` is valid input, but `"2+2"` is not. If you were building a production
 calculator application that accepted arbitrary input strings, you would probably
-want to handle inputs like "2 + 2*3" or "10/5", because users are likely to
+want to handle inputs like `"2 + 2*3"` or `"10/5"`, because users are likely to
 enter them. But for the sake of simplicity, the example function doesn't parse
 such strings.
 
 Notice that `Calculate` returns a float and an error. If the function finishes
 successfully, it returns the result of the arithmetic operation as a
 float and `nil` for the error. If the function doesn't finish successfully, it
-returns the zero value for the float, which is 0, and an error. This means that
-you should check for an error before using a returned value of `0`. Otherwise
-you can't tell the difference between an expected 0 (from "2 - 2", for example)
-and a zero value returned from an error.
+returns the zero value for the float, which is `0`, and an error. This means
+that you should check for an error before using a returned value of `0`.
+Otherwise you can't tell the difference between an expected `0` (from the input
+`"2 - 2"`, for example) and a zero value returned from an error.
 
 > Note: To learn more about verifying a zero value using idiomatic Go, see
 the discussion of the "comma ok" pattern in
@@ -144,7 +144,7 @@ func TestAdd(t *testing.T) {
 
 Add the test to your project and run it:
 
-1. In the **tutorial** directory, create a file called **calculate_test.go**:
+1. In the **tutorial** directory, create a file named **calculate_test.go**:
    `touch calculate_test.go`
 2. Copy the code above, including the package and import statements, and paste
    it into **calculate_test.go**.
@@ -160,25 +160,31 @@ ok  	tutorial/calculator	0.445s
 
 This means that your test ran successfully.
 
+### More about `go test`
+
 `TestAdd` has a signature of the form `func TestXxx(*testing.T)` and is in a
 file with a name ending in **_test.go**, so `go test` knows to run it. Because
-of the special file name, the test code won't be compiled as part of a build.
+of the special filename, the test code won't be compiled by `go build` (see
+[Compile packages and dependencies](https://pkg.go.dev/cmd/go#hdr-Compile_packages_and_dependencies)).
 
-You can also specify which packages you want to test with `go test`. If you had
-a **pkg** directory, you could run all the tests beneath it using
-`go test ./pkg/...`. To test all of the packages in a project, you can run
+Using `go test`, you can specify which packages you want to test. If you
+had a **pkg** directory, you could run all the tests beneath it using
+`go test ./pkg/...`. To test all of the packages in a project, run
 `go test ./...` from the top directory. To learn more about the `go test`
 command, see [Test packages](https://pkg.go.dev/cmd/go#hdr-Test_packages).
+
+### `got` and `want`
 
 `TestAdd` is slightly verbose. It could be rewritten without using the `want`
 variable, like this:
 
 ```go
 func TestAdd(t *testing.T) {
+	//want := 4.0
 	got, _ := Calculate("2 + 2")
 
-	if got != 4.0 {
-    t.Errorf("got %v; want 4.0", got)
+	if got != 4.0 { // replaced `want` with `4.0`
+		t.Errorf("got %v; want 4.0", got) // replaced `%v` with `4.0`
 	}
 }
 ```
@@ -190,6 +196,8 @@ actual value assigned to `got`. Also, using the `want` variable makes the test
 more maintainable. If you need to change the expected result, you only need to
 update the code in one place (`want`), rather than two (the constant `4.0` and
 the string `"4.0"` in the error message).
+
+### Logging and failing
 
 If the actual and expected results don't match (`if got != want`),
 [Errorf](https://pkg.go.dev/testing#T.Errorf) logs an error message and marks
@@ -372,6 +380,7 @@ This tutorial has covered the basics of automated testing with Go. To learn
 more, see the following resources:
 
 * [Go by Example: Testing](https://gobyexample.com/testing)
+* [Go docs: Add a test](https://go.dev/doc/tutorial/add-a-test)
 * [Go docs: How to Write Go Code: Testing](https://go.dev/doc/code#Testing)
 * [testing](https://pkg.go.dev/testing)
 * [yourbasic: Table-driven unit tests](https://yourbasic.org/golang/table-driven-unit-test/)
