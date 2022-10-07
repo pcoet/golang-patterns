@@ -119,7 +119,7 @@ the discussion of the "comma ok" pattern in
 
 ## Create a simple test
 
-First you'll write a simple test to verify a single output of the function. The
+First you'll create a simple test to verify a single output of the function. The
 test will verify that `Calculate` can do addition. To keep things simple, it
 won't inspect the error value.
 
@@ -200,12 +200,12 @@ the string `"4.0"` in the error message).
 ### Logging and failing
 
 If the actual and expected results don't match (`if got != want`),
-[Errorf](https://pkg.go.dev/testing#T.Errorf) logs an error message and marks
+[T.Errorf](https://pkg.go.dev/testing#T.Errorf) logs an error message and marks
 the test as failed. If you want to stop execution of a failed function
-immediately, you can use [Fatalf](https://pkg.go.dev/testing#T.Fatalf). If you
+immediately, you can use [T.Fatalf](https://pkg.go.dev/testing#T.Fatalf). If you
 don't need formatted output, you can use the
-[Error](https://pkg.go.dev/testing#T.Error) or
-[Fatal](https://pkg.go.dev/testing#T.Fatal) methods. All of these methods are
+[T.Error](https://pkg.go.dev/testing#T.Error) or
+[T.Fatal](https://pkg.go.dev/testing#T.Fatal) methods. All of these methods are
 available on the pointer to `testing.T` that's passed in to every test function.
 
 ## Create a table-driven test
@@ -252,19 +252,23 @@ Add the test to your project and run it:
 
 You should see output like before, indicating that the tests have passed.
 
-`TestCalculate` uses a slice of structs, `cases` to define the inputs and
-outputs of tests to be run. This is the test table. The `name` field identifies
-the test case. The `in` field holds the input string. The `want` field
-specifies the expected result. And the `ok` field indicates if `Calculate`
-is expected to return without an error. Unlike `TestAdd`, `TestCalculate`
-verifies both the float and the error returned by `Calculate`:
+`TestCalculate` uses a slice of structs, `cases`, to define the inputs and
+outputs of the tests to be run. This is the test table. The `name` field
+identifies the test case. The `in` field holds the input string. The `want`
+field specifies the expected result. And the `ok` field is `true` if `Calculate`
+is expected to return without an error, and `false` otherwise.
+
+### Checking for errors
+
+Unlike `TestAdd`, `TestCalculate` verifies both the float and the error returned
+by `Calculate`:
 
 ```go
-			got, err := Calculate(c.in)
-			ok := err == nil // no error means the result is ok
-			if (got != c.want) || (ok != c.ok) { // check both `got` and `ok`
-				t.Errorf("got %v, %v; want %v, %v", got, ok, c.want, c.ok)
-			}
+got, err := Calculate(c.in)
+ok := err == nil // no error means the result is ok
+if (got != c.want) || (ok != c.ok) { // check both `got` and `ok`
+	t.Errorf("got %v, %v; want %v, %v", got, ok, c.want, c.ok)
+}
 ```
 
 For some cases, you do need to check both `got` and `ok` to verify the result.
@@ -278,13 +282,16 @@ more than the logic of the `Calculate` function.
 
 If the actual and expected results don't match, `TestCalculate` invokes `Errorf`.
 
-The tests happen in the body of the [t.Run](https://pkg.go.dev/testing#T.Run)
-method, which is invoked for each element in the test table. `Run` has two
-parameters: a `name` string that identifies the test and an anonymous function
-to manage the test. Behind the scenes, `Run` creates a goroutine for each test.
-In this way, you can use `Run` to create subtests.
+### Running subtests with `T.Run`
 
-You could also create a table-driven test without using `Run`, but the support
+The tests happen in the body of the [T.Run](https://pkg.go.dev/testing#T.Run)
+method, which is invoked for each element in the test table. `T.Run` has two
+parameters: a `name` string that identifies the test and an anonymous function
+that uses a pointer to `testing.T` to manage the test. Behind the scenes,
+`T.Run` creates a goroutine for each test. This is how you use `T.Run` to create
+subtests.
+
+You could also create a table-driven test without using `T.Run`, but the support
 for named subtests is useful, as you'll see in the next section.
 
 ## Examine test failures
@@ -296,17 +303,17 @@ of `4` each test expects `5`.
 Before:
 
 ```go
-		{"add", "2 + 2", 4, true},
-		...
-		{"multiply", "2 * 2", 4, true},
+{"add", "2 + 2", 4, true},
+...
+{"multiply", "2 * 2", 4, true},
 ```
 
 After:
 
 ```go
-		{"add", "2 + 2", 5, true}, // 2 + 2 = 5; test will fail
-		...
-		{"multiply", "2 * 2", 5, true}, // 2 + 2 = 5; test will fail
+{"add", "2 + 2", 5, true}, // 2 + 2 = 5; test will fail
+...
+{"multiply", "2 * 2", 5, true}, // 2 * 2 = 5; test will fail
 ```
 
 Now, when you run `go test`, these cases fail with output like this:
@@ -322,8 +329,8 @@ exit status 1
 FAIL	tutorial/calculator	4.003s
 ```
 
-You can see how `Run` uses the `name` arguments to identify the subtests:
-`TestCalculate/add` and `TestCalculate/multiply`. If you removed `Run` and ran
+You can see how `T.Run` uses the `name` arguments to identify the subtests:
+`TestCalculate/add` and `TestCalculate/multiply`. If you removed `T.Run` and ran
 the tests again, you'd still know when a test failed. But the output would be
 less helpful. It would look something like this:
 
@@ -337,7 +344,7 @@ FAIL	tutorial/calculator	0.603s
 ```
 
 Here you can see that the test returned two errors, but you have to use the
-error message to try to identify which test cases have failed. `Run` removes
+error message to try to identify which test cases have failed. `T.Run` removes
 the guesswork.
 
 Before going on to the next section, change the expected outputs back to `4`.
@@ -354,7 +361,7 @@ In `TestAdd`, insert the log statement
 ```go
 func TestAdd(t *testing.T) {
 	want := 4.0
-	got, _ := Calculate("2 + 2") // note that the error is discarded: `_`
+	got, _ := Calculate("2 + 2")
 
 	// NEW CODE: write to the error log
 	t.Logf("Logging the actual result: %v", got)
@@ -367,7 +374,7 @@ func TestAdd(t *testing.T) {
 
 Save your changes and run the test with the `-v` flag: `go test -v`. You'll see
 verbose output showing the tests that have run and passed. You should also see
-the output from the log statement:
+the output from `T.Logf`:
 
 ```
 === RUN   TestAdd
