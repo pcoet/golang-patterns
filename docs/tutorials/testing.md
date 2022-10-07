@@ -15,11 +15,11 @@ For help installing Go, see [Download and install](https://go.dev/doc/install).
 
 The Go standard library provides a [testing](https://pkg.go.dev/testing) package
 to help you test your code. You can use `testing` to create test functions and
-then run the test functions with the `go test` command. The functions must have
-a signature of the form `func TestXxx(*testing.T)`, and they must be in files
-with names ending in **_test.go**. For example, if you had an `Add` function in
-an **arithmetic.go** file, and you wanted to test it, you could create an
-**arithmetic_test.go** file and add a function with the signature
+then run the test functions with the `go test` command. The test functions must
+have a signature of the form `func TestXxx(*testing.T)`, and they must be in
+files with names ending in **_test.go**. For example, if you had an `Add`
+function in an **arithmetic.go** file, and you wanted to test it, you could
+create an **arithmetic_test.go** file and add a function with the signature
 `func TestAdd(*testing.t)`. Then you could use the `go test` command to run the
 test. You'll set up a similar test harness in the following sections.
 
