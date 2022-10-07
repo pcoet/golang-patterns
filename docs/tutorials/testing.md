@@ -1,4 +1,4 @@
-# An Introduction to testing with Go
+# An Introduction to testing in Go
 
 This tutorial provides an introduction to automated testing in Go. As you work
 through the tutorial, you'll create resources that demonstrate idiomatic Go
