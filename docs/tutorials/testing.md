@@ -1,4 +1,19 @@
-# An Introduction to testing in Go
+# An introduction to testing in Go
+
+**Table of contents**
+
+* [Create a project](#create-a-project)
+* [Create a function](#create-a-function)
+* [Create a simple test](#create-a-simple-test)
+  * [Using `go test`](#using-go-test)
+  * [Using `got` and `want`](#using-got-and-want)
+  * [Logging failures](#logging-failures)
+* [Create a table-driven test](#create-a-table-driven-test)
+  * [Checking for errors](#checking-for-errors)
+  * [Running subtests with `T.Run`](#running-subtests)
+* [Examine test failures](#examine-test-failures)
+* [Examine log output from a passing test](#examine-log-output)
+* [Learn more](#learn-more)
 
 This tutorial provides an introduction to automated testing in Go. As you work
 through the tutorial, you'll create resources that demonstrate idiomatic Go
@@ -23,6 +38,7 @@ create an **arithmetic_test.go** file and add a function with the signature
 `func TestAdd(*testing.t)`. Then you could use the `go test` command to run the
 test. You'll set up a similar test harness in the following sections.
 
+<a id="create-a-project"></a>
 ## Create a project
 
 First, create a Go project:
@@ -42,7 +58,8 @@ go 1.19
 
 The Go version depends on your environment.
 
-## Create an example function
+<a id="create-a-function"></a>
+## Create a function
 
 Here's the function that you'll test in this tutorial:
 
@@ -117,6 +134,7 @@ Otherwise you can't tell the difference between an expected `0` (from the input
 the discussion of the "comma ok" pattern in
 [Effective Go](https://go.dev/doc/effective_go#maps).
 
+<a id="create-a-simple-test"></a>
 ## Create a simple test
 
 First you'll create a simple test to verify a single output of the function. The
@@ -160,7 +178,8 @@ ok  	tutorial/calculator	0.445s
 
 This means that your test ran successfully.
 
-### More about `go test`
+<a id="using-go-test"></a>
+### Using `go test`
 
 `TestAdd` has a signature of the form `func TestXxx(*testing.T)` and is in a
 file with a name ending in **_test.go**, so `go test` knows to run it. Because
@@ -173,7 +192,8 @@ had a **pkg** directory, you could run all the tests beneath it using
 `go test ./...` from the top directory. To learn more about the `go test`
 command, see [Test packages](https://pkg.go.dev/cmd/go#hdr-Test_packages).
 
-### `got` and `want`
+<a id="using-got-and-want"></a>
+### Using `got` and `want`
 
 `TestAdd` is slightly verbose. It could be rewritten without using the `want`
 variable, like this:
@@ -197,7 +217,8 @@ more maintainable. If you need to change the expected result, you only need to
 update the code in one place (`want`), rather than two (the constant `4.0` and
 the string `"4.0"` in the error message).
 
-### Logging and failing
+<a id="logging-failures"></a>
+### Logging failures
 
 If the actual and expected results don't match (`if got != want`),
 [T.Errorf](https://pkg.go.dev/testing#T.Errorf) logs an error message and marks
@@ -208,6 +229,7 @@ don't need formatted output, you can use the
 [T.Fatal](https://pkg.go.dev/testing#T.Fatal) methods. All of these methods are
 available on the pointer to `testing.T` that's passed in to every test function.
 
+<a id="create-a-table-driven-test"></a>
 ## Create a table-driven test
 
 You could write multiple functions like `TestAdd` that verify a single output,
@@ -258,6 +280,7 @@ identifies the test case. The `in` field holds the input string. The `want`
 field specifies the expected result. And the `ok` field is `true` if `Calculate`
 is expected to return without an error, and `false` otherwise.
 
+<a id="checking-for-errors"></a>
 ### Checking for errors
 
 Unlike `TestAdd`, `TestCalculate` verifies both the float and the error returned
@@ -282,6 +305,7 @@ more than the logic of the `Calculate` function.
 
 If the actual and expected results don't match, `TestCalculate` invokes `Errorf`.
 
+<a id="running-subtests"></a>
 ### Running subtests with `T.Run`
 
 The tests happen in the body of the [T.Run](https://pkg.go.dev/testing#T.Run)
@@ -294,6 +318,7 @@ subtests.
 You could also create a table-driven test without using `T.Run`, but the support
 for named subtests is useful, as you'll see in the next section.
 
+<a id="examine-test-failures"></a>
 ## Examine test failures
 
 It's useful to know what to expect when tests fail. In `TestCalculate`, change
@@ -349,6 +374,7 @@ the guesswork.
 
 Before going on to the next section, change the expected outputs back to `4`.
 
+<a id="examine-log-output"></a>
 ## Examine log output from a passing test
 
 In some cases, you might want to log output from a passing test &ndash; for
@@ -382,6 +408,7 @@ the output from `T.Logf`:
 --- PASS: TestAdd (0.00s)
 ```
 
+<a id="learn-more"></a>
 ## Learn more
 
 This tutorial has covered the basics of automated testing with Go. To learn
