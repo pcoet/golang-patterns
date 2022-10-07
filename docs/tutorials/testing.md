@@ -205,7 +205,8 @@ the test as failed. If you want to stop execution of a failed function
 immediately, you can use [Fatalf](https://pkg.go.dev/testing#T.Fatalf). If you
 don't need formatted output, you can use the
 [Error](https://pkg.go.dev/testing#T.Error) or
-[Fatal](https://pkg.go.dev/testing#T.Fatal) methods.
+[Fatal](https://pkg.go.dev/testing#T.Fatal) methods. All of these methods are
+available on the pointer to `testing.T` that's passed in to every test function.
 
 ## Create a table-driven test
 
