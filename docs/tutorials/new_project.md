@@ -19,31 +19,23 @@ initialize the module with the name of the GitHub repo. For example, if you have
 (or will have) a GitHub username of `myuser` and a repo of `myproj`, you'd run
 `go mod init github.com/myuser/myproj`.
 
-The following definitions come from the
-[Go Modules Reference Glossary](https://go.dev/ref/mod#glossary) (a few of the
-entries have been lightly edited):
-
-* **module:** A collection of packages that are released, versioned, and
-  distributed together.
-* **module path:** A path that identifies a module and acts as a prefix for
-  package import paths within the module. For example, `"golang.org/x/net"`.
-* **go.mod file:** The file that defines a module’s path, requirements, and
-  other metadata. Appears in the module’s root directory.
-* **module root directory:** The directory that contains the go.mod file that
-  defines a module.
-* **main module:** The module in which the go command is invoked. The main
-  module is defined by a go.mod file in the current directory or a parent
-  directory.
-* **package:** A collection of source files in the same directory that are
-  compiled together.
-**import path:** A string used to import a package in a Go source file.
-  Synonymous with package path.
-* **package path:** The path that uniquely identifies a package. A package path
-  is a module path joined with a subdirectory within the module. For example
-  `"golang.org/x/net/html"` is the package path for the package in the module
-  `"golang.org/x/net"` in the `"html"` subdirectory. Synonym of import path.
-* **repository root path:** The portion of a module path that corresponds to a
-  version control repository’s root directory.
+* A module is a collection of packages that can be released and distributed as
+  a unit.
+* Every module has a module path that identifies it. The module path is declared
+  in the **go.mod** file and prefixes package import paths from the module.
+  `github.com/pcoet/golang-patterns` is a module path.
+* When you run `go mod init`, you create a **go.mod** file that defines the
+  module path and Go version for the module. If you add dependencies, these will
+  be defined in the **go.mod** file too. The root directory of a module is, by
+  definition, the directory containing the **go.mod** file.
+* The main module is the module where you run the `go` command. The main module
+  can be in a directory with a **go.mod** file, or it can be in a child of the
+  directory with the **go.mod** file.
+* A package is a set of source files compiled together from the same directory.
+  Every package is uniquely identified by an import path - a string formed by
+  prepending the module path to the directory of the package.
+* You can find the official definitions of module entities in the
+  [glossary of the Go module reference](https://go.dev/ref/mod#glossary).
 
 Notes about the `go mod` command:
 
@@ -57,7 +49,7 @@ Notes about the `go mod` command:
 
 ## Create a library file
 
-<!-- TODO: develop an example library function (what? something cool...) -->
+<!-- TODO: develop an example library function: func multiplier(n int) func(n int) float64 -->
 <!-- TODO: start here; use as a reference: https://github.com/pcoet/golang-patterns/tree/main/pkg/examples -->
 
 ## Create a test
