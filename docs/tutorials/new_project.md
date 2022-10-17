@@ -47,7 +47,7 @@ Notes about the `go mod` command:
   `tutorial/myproj`. The path argument is optional, and `go mod` tries to
   infer the path from existing resources, if you omit it.
 
-## Create a library file
+## Create a package
 
 Create an example package:
 
@@ -70,7 +70,7 @@ for
 Although function closures and higher-order functions are not directly related
 to this tutorial, they're neat features and worth knowing about.
 
-## Create a test
+## Test a package
 
 Create and run test:
 
