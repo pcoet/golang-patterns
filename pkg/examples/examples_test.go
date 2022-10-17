@@ -55,3 +55,13 @@ func TestCalculate(t *testing.T) {
 		})
 	}
 }
+
+func TestMultiplier(t *testing.T) {
+	double := Multiplier(2)
+	want := 20.0
+	got := double(10)
+
+	if got != want {
+		t.Errorf("got %v; want %v", got, want)
+	}
+}

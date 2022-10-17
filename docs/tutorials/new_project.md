@@ -49,14 +49,33 @@ Notes about the `go mod` command:
 
 ## Create a library file
 
-<!-- TODO: develop an example library function: func multiplier(n int) func(n int) float64 -->
 <!-- TODO: start here; use as a reference: https://github.com/pcoet/golang-patterns/tree/main/pkg/examples -->
+
+```go
+// Multiplier takes a float m and returns a function that takes a float n and
+// returns m * n.
+func Multiplier(m float64) func(float64) float64 {
+	return func(n float64) float64 {
+		return m * n
+	}
+}
+```
 
 ## Create a test
 
-## Create a main file
+```go
+func TestMultiplier(t *testing.T) {
+	double := Multiplier(2)
+	want := 20.0
+	got := double(10)
 
-## Generate documentation
+	if got != want {
+		t.Errorf("got %v; want %v", got, want)
+	}
+}
+```
+
+## Create a main file
 
 ## Learn more
 
