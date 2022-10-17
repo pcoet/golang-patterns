@@ -49,33 +49,54 @@ Notes about the `go mod` command:
 
 ## Create a library file
 
-<!-- TODO: start here; use as a reference: https://github.com/pcoet/golang-patterns/tree/main/pkg/examples -->
+Create an example package:
 
-```go
-// Multiplier takes a float m and returns a function that takes a float n and
-// returns m * n.
-func Multiplier(m float64) func(float64) float64 {
-	return func(n float64) float64 {
-		return m * n
-	}
-}
-```
+1. In the **tutorial** directory, create a **pkg/multiplier.go** file:
+   `mkdir pkg && touch pkg/multiplier.go`
+2. Copy the following function into **multiplier.go** and save the file.
+   ```go
+   func Multiplier(m float64) func(float64) float64 {
+     return func(n float64) float64 {
+       return m * n
+     }
+   }
+   ```
+
+`Multiplier` takes a float, `m`, and returns a function that takes float `n` and
+returns the result of `m * n`. `Multiplier` implements a
+[function closure](https://go.dev/tour/moretypes/25) and demonstrates Go support
+for
+[higher-order functions](https://en.wikipedia.org/wiki/Higher-order_function).
+Although function closures and higher-order functions are not directly related
+to this tutorial, they're neat features and worth knowing about.
 
 ## Create a test
 
-```go
-func TestMultiplier(t *testing.T) {
-	double := Multiplier(2)
-	want := 20.0
-	got := double(10)
+Create and run test:
 
-	if got != want {
-		t.Errorf("got %v; want %v", got, want)
-	}
-}
-```
+1. In the **tutorial** directory, create a **pkg/multiplier_test.go** file:
+   `touch pkg/multiplier_test.go`
+2. Copy the following function into **multiplier_test.go** and save the file.
+   ```go
+   func TestMultiplier(t *testing.T) {
+	   double := Multiplier(2)
+	   want := 20.0
+	   got := double(10)
+
+	   if got != want {
+		   t.Errorf("got %v; want %v", got, want)
+	   }
+   }
+   ```
+3. Run `TestMultiplier`:
+   ```
+   go test ./pkg/...
+   ```
+   If there were other tests in the **pkg** directory, this command would run them too.
 
 ## Create a main file
+
+<!-- TODO: start here; use as a reference: https://github.com/pcoet/golang-patterns/tree/main/pkg/examples -->
 
 ## Learn more
 
