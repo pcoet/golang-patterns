@@ -2,7 +2,10 @@
 
 This tutorial is more than a quickstart; it aims to help you get up and running with a new Go project while
 also providing a deeper look into Go modules and the `go` commands you'll need
-to work with a Go project effectively.
+to work with a Go project effectively. The tutorial builds on the standard Go
+project structure laid out in
+[Standard Go Project Layout](https://github.com/golang-standards/project-layout)
+(henceforth abbreviated SGPL).
 
 ## Prerequisites
 
@@ -51,16 +54,21 @@ Notes about the `go mod` command:
 
 Create an example package:
 
-1. In the **tutorial** directory, create a **pkg/multiplier.go** file:
-   `mkdir pkg && touch pkg/multiplier.go`
-2. Copy the following function into **multiplier.go** and save the file.
+1. In the **tutorial** directory, create a **pkg/mypack/multiplier.go** file:
+   `mkdir -p pkg/mypack && touch pkg/mypack/multiplier.go`
+2. Copy the following code into **multiplier.go** and save the file.
    ```go
+   package mypack
+
    func Multiplier(m float64) func(float64) float64 {
      return func(n float64) float64 {
        return m * n
      }
    }
    ```
+3. (Optional) Format the file: `gofmt pkg/mypack/multiplier.go`. If you're working in
+   and IDE with Go tools installed, the file might be automatically formatted on
+   save.
 
 `Multiplier` takes a float, `m`, and returns a function that takes float `n` and
 returns the result of `m * n`. `Multiplier` implements a
@@ -70,33 +78,87 @@ for
 Although function closures and higher-order functions are not directly related
 to this tutorial, they're neat features and worth knowing about.
 
+<!-- TODO: explain the pkg directory (see SGPL) -->
+
 ## Test a package
 
-Create and run test:
+Create and run a test:
 
 1. In the **tutorial** directory, create a **pkg/multiplier_test.go** file:
-   `touch pkg/multiplier_test.go`
-2. Copy the following function into **multiplier_test.go** and save the file.
-   ```go
-   func TestMultiplier(t *testing.T) {
-	   double := Multiplier(2)
-	   want := 20.0
-	   got := double(10)
+   `touch pkg/mypack/multiplier_test.go`
+2. Copy the following code into **multiplier_test.go** and save the file:
 
-	   if got != want {
-		   t.Errorf("got %v; want %v", got, want)
-	   }
+   ```go
+   package mypack
+
+   import (
+     "testing"
+   )
+
+   func TestMultiplier(t *testing.T) {
+     double := Multiplier(2)
+     want := 20.0
+     got := double(10)
+
+     if got != want {
+       t.Errorf("got %v; want %v", got, want)
+     }
    }
    ```
-3. Run `TestMultiplier`:
+3. (Optional) Format the file: `gofmt pkg/mypack/multiplier_test.go`
+4. Run `TestMultiplier`:
    ```
    go test ./pkg/...
    ```
    If there were other tests in the **pkg** directory, this command would run them too.
 
+   <!-- TODO: explain go test -->
+
 ## Create a main file
 
-<!-- TODO: start here; use as a reference: https://github.com/pcoet/golang-patterns/tree/main/pkg/examples -->
+If you're just creating a library for other applications to consume, you already
+have the basic structure of your package. But if want to run your code, you
+need a main file. Your project could even have multiple main files, each for
+a different client.
+
+Create and run a main file:
+
+1. In the **tutorial** directory, create a **cmd/app/main.go** file:
+   `mkdir -p cmd/myapp && touch cmd/myapp/main.go`
+2. Copy the following code into **main.go** and save the file:
+
+   ```go
+   package main
+
+   import (
+     "fmt"
+
+     "tutorial/myproj/pkg/mypack"
+   )
+
+   func main() {
+     double := mypack.Multiplier(2)
+     fmt.Println(double(2))
+   }
+   ```
+3. (Optional) Format the file: `gofmt cmd/myapp/main.go`
+4. Run the application: `go run cmd/myapp/main.go`
+
+You should see output similar to ...
+
+<!-- TODO: explain the imports -->
+<!-- TODO: explain go run -->
+<!-- TODO: explain the cmd directory (see SGPL) -->
+
+## Install the application
+
+Install and run your application:
+
+1. In the root directory (**tutorial**), run
+   `go install tutorial/myproj/cmd/myapp`.
+2. Run the app: `~/go/bin/myapp`
+
+<!-- TODO: explain go install -->
 
 ## Learn more
 
