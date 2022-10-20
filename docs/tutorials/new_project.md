@@ -12,13 +12,12 @@ working through the tutorial, you'll accomplish the following objectives:
 
 1. Set up a project structure that you can use for Go development
 2. Understand the layout and packaging of a typical Go project
-3. Learn about the most important tools for managing Go source code
+3. Learn about some of the tools available for managing Go source code
 
 <a id="before-you-begin"></a>
 ## Before you begin
 
-Before starting the tutorial, make sure you're familiar with the assumptions and
-prerequisites.
+Before you begin, review the assumptions and prerequisites.
 
 <a id="assumptions"></a>
 ### Assumptions
@@ -35,14 +34,14 @@ you might need to adapt some of the commands for your environment.
 <a id="prerequisites"></a>
 ### Prerequisites
 
-To complete this tutorial, you need to have Go installed. For help installing
-Go, see [Download and install](https://go.dev/doc/install).
+To complete this tutorial, you need to have Go installed. To install Go, see
+[Download and install](https://go.dev/doc/install).
 
 <a id="create-a-module"></a>
 ## Create a module
 
 A Go [module](https://go.dev/ref/mod#glos-module) is a collection of packages
-that can be released, distributed, and versioned together.
+that can be released and distributed together in versions.
 
 To get started with a new project, create a Go module:
 
@@ -55,7 +54,7 @@ directory. The directory containing the
 [go.mod file](https://go.dev/ref/mod#glos-go-mod-file) is, by definition, the
 root directory of the module.
 
-The contents of your new **go.mod** file should look something like this:
+The content of your new **go.mod** file should look something like this:
 
 ```
 module myproj
@@ -71,27 +70,27 @@ module.
 The module path can also include a
 [repository root path](https://go.dev/ref/mod#glos-repository-root-path),
 which is a path segment that specifies the root directory of a version control
-repository. For example, if you're planning to distribute a Go module from
-GitHub under the user `myuser`, and you have a repository named `myproj`, you'd
-initialize your module with `go mod init github.com/myuser/myproj`, where
-`github.com/myuser/myproj` is the repository root path.
+repository. For example, if you were planning to distribute a Go module from
+GitHub under the user/repo `myuser/myproj`, you could use
+`github.com/myuser/myproj` as both the module path and the repository root
+path, and you'd initialize your module with the command
+`go mod init github.com/myuser/myproj`.
 
 ## Create a package
 
-<!-- TODO: start here -->
-
-There's more than one way to structure a Go project. This tutorial relies on the
-[Standard Go Project Layout](https://github.com/golang-standards/project-layout).
-
-<!-- TODO: paraphrase glossary and cite -->
-* A package is a set of source files compiled together from the same directory.
-  Every package is uniquely identified by an import path - a string formed by
-  prepending the module path to the directory of the package.
+A [package](https://go.dev/ref/mod#glos-package) is a collection of source files
+that are located in the same directory and compiled together. For this tutorial,
+you'll create a package under the **pkg** directory. This is a convention
+from the
+[Standard Go Project Layout](https://github.com/golang-standards/project-layout)
+(SGPL), which is the model for the project layout in this tutorial.
+[pkg](https://github.com/golang-standards/project-layout/tree/master/pkg)
+should contain Go libraries intended for use by external consumers.
 
 Create an example package:
 
-1. In the **tutorial** directory, create a **pkg/mypack/multiplier.go** file:
-   `mkdir -p pkg/mypack && touch pkg/mypack/multiplier.go`
+1. In the root directory (**myproj**), create a **pkg/mypack/multiplier.go**
+   file: `mkdir -p pkg/mypack && touch pkg/mypack/multiplier.go`
 2. Copy the following code into **multiplier.go** and save the file.
    ```go
    package mypack
@@ -102,21 +101,24 @@ Create an example package:
      }
    }
    ```
-3. (Optional) Format the file: `gofmt pkg/mypack/multiplier.go`. If you're working in
-   and IDE with Go tools installed, the file might be automatically formatted on
-   save.
+3. (Optional) Format the file: `gofmt pkg/mypack/multiplier.go`.
+   [gofmt](https://pkg.go.dev/cmd/gofmt) is a tool for formatting Go source code.
+   Depending on the configuration of your editor or IDE, the file might be
+   automatically formatted on save, in which case you don't need to run this
+   command.
 
-`Multiplier` takes a float, `m`, and returns a function that takes float `n` and
-returns the result of `m * n`. `Multiplier` implements a
+The function that you just created, `Multiplier`, takes a float, `m`, and
+returns another function that takes a float, `n`, and returns the result of
+`m * n`. `Multiplier` implements a
 [function closure](https://go.dev/tour/moretypes/25) and demonstrates Go support
 for
 [higher-order functions](https://en.wikipedia.org/wiki/Higher-order_function).
 Although function closures and higher-order functions are not directly related
 to this tutorial, they're neat features and worth knowing about.
 
-<!-- TODO: explain the pkg directory (see SGPL) -->
-
 ## Test a package
+
+<!-- TODO: work through all previous material and then START HERE -->
 
 Create and run a test:
 
