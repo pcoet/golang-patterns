@@ -6,6 +6,8 @@
   * [Assumptions](#assumptions)
   * [Prerequisites](#prerequisites)
 * [Create a module](#create-a-module)
+* [Create a package](#create-a-package)
+* [Test a package](#test-a-package)
 
 This tutorial walks you through the process of creating a Go project. By
 working through the tutorial, you'll accomplish the following objectives:
@@ -76,6 +78,7 @@ GitHub under the user/repo `myuser/myproj`, you could use
 path, and you'd initialize your module with the command
 `go mod init github.com/myuser/myproj`.
 
+<a id="create-a-package"></a>
 ## Create a package
 
 A [package](https://go.dev/ref/mod#glos-package) is a collection of source files
@@ -116,13 +119,16 @@ for
 Although function closures and higher-order functions are not directly related
 to this tutorial, they're neat features and worth knowing about.
 
+<a id="test-a-package"></a>
 ## Test a package
 
-<!-- TODO: work through all previous material and then START HERE -->
+The Go standard library includes the [testing](https://pkg.go.dev/testing)
+package to help you write unit tests. By following a few conventions, you can
+then run your tests using the `go test` command.
 
 Create and run a test:
 
-1. In the **tutorial** directory, create a **pkg/multiplier_test.go** file:
+1. In the root directory (**myproj**), create a **pkg/multiplier_test.go** file:
    `touch pkg/mypack/multiplier_test.go`
 2. Copy the following code into **multiplier_test.go** and save the file:
 
@@ -144,15 +150,27 @@ Create and run a test:
    }
    ```
 3. (Optional) Format the file: `gofmt pkg/mypack/multiplier_test.go`
-4. Run `TestMultiplier`:
+4. Run the tests in the **pkg** directory:
    ```
    go test ./pkg/...
    ```
-   If there were other tests in the **pkg** directory, this command would run them too.
 
-   <!-- TODO: explain go test -->
+Your test should complete successfully, and you should see output similar to
+`ok  	myproj/pkg/mypack	0.626s`.
+
+The `TestMultiplier` function uses `Multiplier` to create a `double` function
+that multiplies an input float by 2 and returns the result. The test follows a
+common Go pattern of naming the expected output `want` and the actual output
+`got`. If these values are not equal, `T.Errorf` is invoked and the test fails.
+
+The signature of `TestMultiplier` is important. The `go test` command runs
+functions with a signature of the form `func TestXxx(t *testing.T)` located in
+files with filenames ending in **_test.go**. To learn more about Go testing, see
+[An introduction to testing in Go](https://github.com/pcoet/golang-patterns/blob/main/docs/tutorials/testing.md).
 
 ## Create a main file
+
+<!-- TODO: work through previous material and then START HERE -->
 
 If you're just creating a library for other applications to consume, you already
 have the basic structure of your package. But if want to run your code, you
