@@ -8,6 +8,7 @@
 * [Create a module](#create-a-module)
 * [Create a package](#create-a-package)
 * [Test a package](#test-a-package)
+* [Create a main program](#create-a-main-program)
 
 This tutorial walks you through the process of creating a Go project. By
 working through the tutorial, you'll accomplish the following objectives:
@@ -122,9 +123,8 @@ to this tutorial, they're neat features and worth knowing about.
 <a id="test-a-package"></a>
 ## Test a package
 
-The Go standard library includes the [testing](https://pkg.go.dev/testing)
-package to help you write unit tests. By following a few conventions, you can
-then run your tests using the `go test` command.
+Go provides the [testing](https://pkg.go.dev/testing) package to help you write
+unit tests and the `go test` command to run them.
 
 Create and run a test:
 
@@ -155,8 +155,8 @@ Create and run a test:
    go test ./pkg/...
    ```
 
-Your test should complete successfully, and you should see output similar to
-`ok  	myproj/pkg/mypack	0.626s`.
+You should see output similar to `ok  	myproj/pkg/mypack	0.626s`. This means
+that your test ran successfully.
 
 The `TestMultiplier` function uses `Multiplier` to create a `double` function
 that multiplies an input float by 2 and returns the result. The test follows a
@@ -164,22 +164,22 @@ common Go pattern of naming the expected output `want` and the actual output
 `got`. If these values are not equal, `T.Errorf` is invoked and the test fails.
 
 The signature of `TestMultiplier` is important. The `go test` command runs
-functions with a signature of the form `func TestXxx(t *testing.T)` located in
-files with filenames ending in **_test.go**. To learn more about Go testing, see
+functions that have a signature of the form `func TestXxx(t *testing.T)` and
+that are located in files with filenames ending in **_test.go**. To learn more
+about Go testing, see
 [An introduction to testing in Go](https://github.com/pcoet/golang-patterns/blob/main/docs/tutorials/testing.md).
 
-## Create a main file
+<a id="create-a-main-program"></a>
+## Create a main program
 
-<!-- TODO: work through previous material and then START HERE -->
-
-If you're just creating a library for other applications to consume, you already
-have the basic structure of your package. But if want to run your code, you
-need a main file. Your project could even have multiple main files, each for
-a different client.
+If you only want to create a module for other packages to consume, you already
+have the basic structure for your project. But if want to create a client to
+to consume your own package, you need a main file. Your project could even have
+multiple main files, each for a different client.
 
 Create and run a main file:
 
-1. In the **tutorial** directory, create a **cmd/app/main.go** file:
+1. In the root directory (**myproj**), create a **cmd/myapp/main.go** file:
    `mkdir -p cmd/myapp && touch cmd/myapp/main.go`
 2. Copy the following code into **main.go** and save the file:
 
@@ -200,13 +200,29 @@ Create and run a main file:
 3. (Optional) Format the file: `gofmt cmd/myapp/main.go`
 4. Run the application: `go run cmd/myapp/main.go`
 
-You should see output similar to ...
+Your `main` function should output `4`.
 
-<!-- TODO: explain the imports -->
-<!-- TODO: explain go run -->
-<!-- TODO: explain the cmd directory (see SGPL) -->
+This is a pretty simple program. Like the test you created earlier, the `main`
+function creates a `double` function and uses that to double a number. The
+result is printed to standard output using `fmt.Println`. But there are a couple
+of things to note. First, there's the `import` statement, which imports
+[fmt](https://pkg.go.dev/fmt) from the standard library and also imports your
+`mypack` package. This is how you use package in a Go application.
+
+The other thing to note is the structure of your **main.go** file, which
+contains a `main` function in a `main` package. When you use
+[go run](https://pkg.go.dev/cmd/go#hdr-Compile_and_run_Go_program)
+to complie the `main` package and run it, the `main` function is invoked.
+
+The directory structure for the `main` package follows the SGPL convention of
+using a [cmd](https://github.com/golang-standards/project-layout/tree/master/cmd)
+directory for a project's main applications. In this case, you only have one
+application, but in more complex projects you might have multiple client
+applications.
 
 ## Install the application
+
+<!-- TODO: work through previous material and then START HERE -->
 
 Install and run your application:
 
@@ -227,7 +243,5 @@ Review the following:
 
 * https://golang.org/ref/mod#go-mod-init
 * https://golang.org/doc/tutorial/create-module
+* https://go.dev/doc/code
 
-## Notes
-
-1. [Go Modules Reference: Glossary](https://go.dev/ref/mod#glossary)
