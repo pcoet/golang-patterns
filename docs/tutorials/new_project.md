@@ -9,6 +9,8 @@
 * [Create a package](#create-a-package)
 * [Test a package](#test-a-package)
 * [Create a main program](#create-a-main-program)
+* [Install the application](#install-the-application)
+* [Learn more](#learn-more)
 
 This tutorial walks you through the process of creating a Go project. By
 working through the tutorial, you'll accomplish the following objectives:
@@ -173,11 +175,12 @@ about Go testing, see
 ## Create a main program
 
 If you only want to create a module for other packages to consume, you already
-have the basic structure for your project. But if want to create a client to
-to consume your own package, you need a main file. Your project could even have
-multiple main files, each for a different client.
+have the basic structure for your project. But if you want to create your own
+client application that uses your package from within the project, you need a
+main file. Your project could even have multiple main files, each for a
+different client.
 
-Create and run a main file:
+Create a main file and client app and run the app:
 
 1. In the root directory (**myproj**), create a **cmd/myapp/main.go** file:
    `mkdir -p cmd/myapp && touch cmd/myapp/main.go`
@@ -207,41 +210,44 @@ function creates a `double` function and uses that to double a number. The
 result is printed to standard output using `fmt.Println`. But there are a couple
 of things to note. First, there's the `import` statement, which imports
 [fmt](https://pkg.go.dev/fmt) from the standard library and also imports your
-`mypack` package. This is how you use package in a Go application.
+`mypack` package. This is how you use packages in a Go application.
 
 The other thing to note is the structure of your **main.go** file, which
 contains a `main` function in a `main` package. When you use
 [go run](https://pkg.go.dev/cmd/go#hdr-Compile_and_run_Go_program)
 to complie the `main` package and run it, the `main` function is invoked.
 
-The directory structure for the `main` package follows the SGPL convention of
-using a [cmd](https://github.com/golang-standards/project-layout/tree/master/cmd)
-directory for a project's main applications. In this case, you only have one
+The directory structure for the `main` package follows the convention of using a
+[cmd](https://github.com/golang-standards/project-layout/tree/master/cmd)
+directory for applications. In this case, you only have one
 application, but in more complex projects you might have multiple client
 applications.
 
+<a id="install-the-application"></a>
 ## Install the application
 
-<!-- TODO: work through previous material and then START HERE -->
+Using the
+[go install](https://pkg.go.dev/cmd/go#hdr-Compile_and_install_packages_and_dependencies),
+command, you can compile your application and install it to the **~/go/bin**
+directory.
 
-Install and run your application:
+Install and run your app:
 
-1. In the root directory (**tutorial**), run
-   `go install myproj/cmd/myapp`.
+1. In the root directory (**myproj**), run `go install myproj/cmd/myapp`.
 2. Run the app: `~/go/bin/myapp`
 
-<!-- TODO: explain go install -->
-
+<a id="learn-more"></a>
 ## Learn more
+
+If you've followed the previous steps, you should now have a Go project that
+comprises a module, a package, and a client application. If you'd like to learn
+more about Go projects, check out the following resources:
+
+<!-- TODO: Copy edit all previous material. -->
+<!-- TODO: Work through the following resources and find anything useful. -->
 
 * [Go docs: Go Modules Reference](https://go.dev/ref/mod)
 * [Go docs: How to Write Go Code](https://go.dev/doc/code)
 * [Go docs: How to Write Go Code (with GOPATH)](https://go.dev/doc/gopath_code)
+* [Go docs: Tutorial: Create a Go Module](https://go.dev/doc/tutorial/create-module)
 * [Standard Go Project Layout](https://github.com/golang-standards/project-layout)
-
-Review the following:
-
-* https://golang.org/ref/mod#go-mod-init
-* https://golang.org/doc/tutorial/create-module
-* https://go.dev/doc/code
-
