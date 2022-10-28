@@ -8,12 +8,12 @@
 * [Create a module](#create-a-module)
 * [Create a package](#create-a-package)
 * [Test a package](#test-a-package)
-* [Create a main program](#create-a-main-program)
+* [Create an application](#create-an-application)
 * [Install the application](#install-the-application)
 * [Learn more](#learn-more)
 
-This tutorial walks you through the process of creating a Go project. By
-working through the tutorial, you'll accomplish the following objectives:
+This tutorial walks you through the process of creating a Go project. As you
+work through the tutorial, you'll accomplish the following objectives:
 
 1. Set up a project structure that you can use for Go development
 2. Understand the layout and packaging of a typical Go project
@@ -34,7 +34,11 @@ This tutorial makes the following assumptions:
   the Go language, [A Tour of Go](https://go.dev/tour/welcome/1) is a great
   place to start.
 * **You have a Unix-like OS.** If you're not working on macOS or Linux,
-you might need to adapt some of the commands for your environment.
+  you might need to adapt some of the commands for your environment.
+* **You haven't set `GOPATH` or `GOBIN`.** If you've set these environment
+  variables, it could alter the installation directory for the app that you'll
+  create and install. To learn more about `GOPATH` and `GOBIN`, see
+  [Your first program](https://go.dev/doc/code#Command).
 
 <a id="prerequisites"></a>
 ### Prerequisites
@@ -46,7 +50,7 @@ To complete this tutorial, you need to have Go installed. To install Go, see
 ## Create a module
 
 A Go [module](https://go.dev/ref/mod#glos-module) is a collection of packages
-that can be released and distributed together in versions.
+that can be released and distributed together.
 
 To get started with a new project, create a Go module:
 
@@ -88,8 +92,7 @@ A [package](https://go.dev/ref/mod#glos-package) is a collection of source files
 that are located in the same directory and compiled together. For this tutorial,
 you'll create a package under the **pkg** directory. This is a convention
 from the
-[Standard Go Project Layout](https://github.com/golang-standards/project-layout)
-(SGPL), which is the model for the project layout in this tutorial.
+[Standard Go Project Layout](https://github.com/golang-standards/project-layout), which is the model for the project layout in this tutorial.
 [pkg](https://github.com/golang-standards/project-layout/tree/master/pkg)
 should contain Go libraries intended for use by external consumers.
 
@@ -107,7 +110,8 @@ Create an example package:
      }
    }
    ```
-3. (Optional) Format the file: `gofmt pkg/mypack/multiplier.go`.
+3. (Optional) Format the file: `gofmt pkg/mypack/multiplier.go`
+
    [gofmt](https://pkg.go.dev/cmd/gofmt) is a tool for formatting Go source code.
    Depending on the configuration of your editor or IDE, the file might be
    automatically formatted on save, in which case you don't need to run this
@@ -152,10 +156,7 @@ Create and run a test:
    }
    ```
 3. (Optional) Format the file: `gofmt pkg/mypack/multiplier_test.go`
-4. Run the tests in the **pkg** directory:
-   ```
-   go test ./pkg/...
-   ```
+4. Run the tests in the **pkg** directory: `go test ./pkg/...`
 
 You should see output similar to `ok  	myproj/pkg/mypack	0.626s`. This means
 that your test ran successfully.
@@ -163,7 +164,7 @@ that your test ran successfully.
 The `TestMultiplier` function uses `Multiplier` to create a `double` function
 that multiplies an input float by 2 and returns the result. The test follows a
 common Go pattern of naming the expected output `want` and the actual output
-`got`. If these values are not equal, `T.Errorf` is invoked and the test fails.
+`got`. If these values are not equal, [T.Errorf](https://pkg.go.dev/testing#T.Errorf) is invoked and the test fails.
 
 The signature of `TestMultiplier` is important. The `go test` command runs
 functions that have a signature of the form `func TestXxx(t *testing.T)` and
@@ -171,16 +172,16 @@ that are located in files with filenames ending in **_test.go**. To learn more
 about Go testing, see
 [An introduction to testing in Go](https://github.com/pcoet/golang-patterns/blob/main/docs/tutorials/testing.md).
 
-<a id="create-a-main-program"></a>
-## Create a main program
+<a id="create-an-application"></a>
+## Create an application
 
-If you only want to create a module for other packages to consume, you already
+If you want to create a module that will only be used by external libraries and applications, you already
 have the basic structure for your project. But if you want to create your own
 client application that uses your package from within the project, you need a
 main file. Your project could even have multiple main files, each for a
 different client.
 
-Create a main file and client app and run the app:
+Create a main file and a client app and run the app:
 
 1. In the root directory (**myproj**), create a **cmd/myapp/main.go** file:
    `mkdir -p cmd/myapp && touch cmd/myapp/main.go`
@@ -203,7 +204,7 @@ Create a main file and client app and run the app:
 3. (Optional) Format the file: `gofmt cmd/myapp/main.go`
 4. Run the application: `go run cmd/myapp/main.go`
 
-Your `main` function should output `4`.
+Your app should print `4`.
 
 This is a pretty simple program. Like the test you created earlier, the `main`
 function creates a `double` function and uses that to double a number. The
@@ -220,8 +221,8 @@ to complie the `main` package and run it, the `main` function is invoked.
 The directory structure for the `main` package follows the convention of using a
 [cmd](https://github.com/golang-standards/project-layout/tree/master/cmd)
 directory for applications. In this case, you only have one
-application, but in more complex projects you might have multiple client
-applications.
+application, but in more complex projects you might have multiple
+apps.
 
 <a id="install-the-application"></a>
 ## Install the application
@@ -233,21 +234,23 @@ directory.
 
 Install and run your app:
 
-1. In the root directory (**myproj**), run `go install myproj/cmd/myapp`.
+1. Install your app from the root directory (**myproj**): `go install myproj/cmd/myapp`
 2. Run the app: `~/go/bin/myapp`
+
+You should once again see `4` printed to standard output.
+
+If you've followed the previous steps, you should now have a Go project that
+comprises a module, a package, and a client application. Nice work!
 
 <a id="learn-more"></a>
 ## Learn more
 
-If you've followed the previous steps, you should now have a Go project that
-comprises a module, a package, and a client application. If you'd like to learn
+If you'd like to learn
 more about Go projects, check out the following resources:
-
-<!-- TODO: Copy edit all previous material. -->
-<!-- TODO: Work through the following resources and find anything useful. -->
 
 * [Go docs: Go Modules Reference](https://go.dev/ref/mod)
 * [Go docs: How to Write Go Code](https://go.dev/doc/code)
-* [Go docs: How to Write Go Code (with GOPATH)](https://go.dev/doc/gopath_code)
 * [Go docs: Tutorial: Create a Go Module](https://go.dev/doc/tutorial/create-module)
+* [Go docs: Tutorial: Get started with Go](https://go.dev/doc/tutorial/getting-started)
 * [Standard Go Project Layout](https://github.com/golang-standards/project-layout)
+* [The Go Blog: Using Go Modules](https://go.dev/blog/using-go-modules)
