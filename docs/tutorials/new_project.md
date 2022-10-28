@@ -92,11 +92,12 @@ A [package](https://go.dev/ref/mod#glos-package) is a collection of source files
 that are located in the same directory and compiled together. For this tutorial,
 you'll create a package under the **pkg** directory. This is a convention
 from the
-[Standard Go Project Layout](https://github.com/golang-standards/project-layout), which is the model for the project layout in this tutorial.
+[Standard Go Project Layout](https://github.com/golang-standards/project-layout),
+which is the model for the project layout in this tutorial.
 [pkg](https://github.com/golang-standards/project-layout/tree/master/pkg)
 should contain Go libraries intended for use by external consumers.
 
-Create an example package:
+Create a package:
 
 1. In the root directory (**myproj**), create a **pkg/mypack/multiplier.go**
    file: `mkdir -p pkg/mypack && touch pkg/mypack/multiplier.go`
@@ -164,7 +165,8 @@ that your test ran successfully.
 The `TestMultiplier` function uses `Multiplier` to create a `double` function
 that multiplies an input float by 2 and returns the result. The test follows a
 common Go pattern of naming the expected output `want` and the actual output
-`got`. If these values are not equal, [T.Errorf](https://pkg.go.dev/testing#T.Errorf) is invoked and the test fails.
+`got`. If these values are not equal,
+[T.Errorf](https://pkg.go.dev/testing#T.Errorf) is invoked and the test fails.
 
 The signature of `TestMultiplier` is important. The `go test` command runs
 functions that have a signature of the form `func TestXxx(t *testing.T)` and
@@ -175,11 +177,11 @@ about Go testing, see
 <a id="create-an-application"></a>
 ## Create an application
 
-If you want to create a module that will only be used by external libraries and applications, you already
-have the basic structure for your project. But if you want to create your own
-client application that uses your package from within the project, you need a
-main file. Your project could even have multiple main files, each for a
-different client.
+If you want to create a package that will only be used by external libraries and
+applications, you already have the basic structure for your project. But if you
+want to create your own client application that uses your package from within
+the project, you need a main file. Your project could even have multiple main
+files, each for a different client.
 
 Create a main file and a client app and run the app:
 
@@ -211,7 +213,7 @@ function creates a `double` function and uses that to double a number. The
 result is printed to standard output using `fmt.Println`. But there are a couple
 of things to note. First, there's the `import` statement, which imports
 [fmt](https://pkg.go.dev/fmt) from the standard library and also imports your
-`mypack` package. This is how you use packages in a Go application.
+`mypack` package. This is how you use packages in Go.
 
 The other thing to note is the structure of your **main.go** file, which
 contains a `main` function in a `main` package. When you use
@@ -228,25 +230,25 @@ apps.
 ## Install the application
 
 Using the
-[go install](https://pkg.go.dev/cmd/go#hdr-Compile_and_install_packages_and_dependencies),
+[go install](https://pkg.go.dev/cmd/go#hdr-Compile_and_install_packages_and_dependencies)
 command, you can compile your application and install it to the **~/go/bin**
 directory.
 
 Install and run your app:
 
-1. Install your app from the root directory (**myproj**): `go install myproj/cmd/myapp`
+1. Install your app from the root directory (**myproj**):
+   `go install myproj/cmd/myapp`
 2. Run the app: `~/go/bin/myapp`
 
 You should once again see `4` printed to standard output.
 
-If you've followed the previous steps, you should now have a Go project that
-comprises a module, a package, and a client application. Nice work!
+If you've followed the previous steps, you should now have a Go project composed
+of a module, a package, and a client application. Nice work!
 
 <a id="learn-more"></a>
 ## Learn more
 
-If you'd like to learn
-more about Go projects, check out the following resources:
+If you'd like to learn more about Go projects, check out the following resources:
 
 * [Go docs: Go Modules Reference](https://go.dev/ref/mod)
 * [Go docs: How to Write Go Code](https://go.dev/doc/code)
