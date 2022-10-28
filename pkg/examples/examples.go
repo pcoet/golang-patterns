@@ -55,3 +55,11 @@ func Calculate(input string) (float64, error) {
 
 	return result, nil
 }
+
+// Multiplier takes a float m and returns a function that takes a float n and
+// returns m * n.
+func Multiplier(m float64) func(float64) float64 {
+	return func(n float64) float64 {
+		return m * n
+	}
+}
